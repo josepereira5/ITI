@@ -9,7 +9,7 @@ services:
     build:
       context: .
     ports:
-      - "8080:8084"  # Mapeia a porta do aplicativo
+      - "8080:8080"  # Mapeia a porta do aplicativo
     networks:
       - mynetwork
 
@@ -23,7 +23,6 @@ services:
         
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
     ports:
       - "8084:8080"
     volumes:
