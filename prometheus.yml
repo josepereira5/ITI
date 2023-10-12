@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s # Intervalo de coleta de métricas
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'pdfer-app'
+    static_configs:
+      - targets: ['prometheus-adapter:8081'] # Substitua 'prometheus-adapter' pelo nome do serviço intermediário no Docker Compose
+    metrics_path: /metrics # O caminho para as métricas no serviço intermediário
+
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
