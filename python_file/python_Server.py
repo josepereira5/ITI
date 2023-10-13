@@ -3,7 +3,36 @@ import requests
 import random
 import os
 import logging 
+import threading
+import time
 
+global ola
+
+ola=1
+
+def make_constant_getFile_requests():
+    while True:
+        data = {
+            "key": "1234123412341234",
+            "fileName": "fileName"
+        }
+        server_response = requests.get("http://pdfer-app:8080/files/fileName", json=data)
+
+
+def make_constant_get_requests():
+    while True:
+        server_response = requests.get('http://pdfer-app:8080/files')
+        
+def make_constant_post_requests():
+    while True:
+        fileName = criar_arquivo_com_nome_aleatorio()
+        data = {
+            "key": "1234123412341234",
+            "length": 200,
+            "fileName": fileName
+        }
+        
+        server_response = requests.post("http://pdfer-app:8080/files", json=data)
 
 
 def gerar_nome_aleatorio(silabas, quantidade):
@@ -27,11 +56,19 @@ app = Flask(__name__)
 # Endpoint para coletar métricas no formato Prometheus Exposition
 @app.route('/metrics', methods=['GET'])
 def get_metrics():
+    global ola
     # Configuração básica do logging
     logging.basicConfig(level=logging.INFO)  # ou logging.DEBUG para incluir mensagens de debug
 
     # Faça uma solicitação ao servidor para obter as métricas JSON (GET)
-    '''
+    """
+    if ola==1:
+        ola=2
+        for _ in range(1000000000):
+            thread = threading.Thread(target=make_constant_get_requests)
+            thread.daemon = True
+            thread.start()
+
     server_response = requests.get('http://pdfer-app:8080/files')
     if server_response.status_code == 200:
         # Traduza as métricas JSON em formato Prometheus Exposition
@@ -42,9 +79,16 @@ def get_metrics():
         return Response(prometheus_metrics, content_type='text/plain')
     else:
         return 'Erro ao recuperar métricas do servidor', 500
-    '''
-    #Post
     """
+    #Post
+    
+    if ola==1:
+        ola=2
+        for _ in range(2500):
+            thread = threading.Thread(target=make_constant_post_requests)
+            thread.daemon = True
+            thread.start()
+
     fileName = criar_arquivo_com_nome_aleatorio()
     data = {
         "key": "1234123412341234",
@@ -63,18 +107,32 @@ def get_metrics():
     else:
         print(f"Erro: {server_response.status_code}")
 
-    """
+
 
 
     #Get Files
-    data = {
+"""
+    if ola==1:
+        ola=2
+        data = {
         "key": "1234123412341234",
         "length": 200,
         "fileName": "fileName"
-    }
-    server_response = requests.post("http://pdfer-app:8080/files", json=data)
+        }
+        server_response = requests.post("http://pdfer-app:8080/files", json=data)
+        for _ in range(10000):
+            thread = threading.Thread(target=make_constant_getFile_requests)
+            thread.daemon = True
+            thread.start()
+
+    
     data = {
-        "key": "1234123412341234"
+        "key": "123412data = {
+        "key": "1234123412341234",
+        "length": 200,
+        "fileName": "fileName"
+        }
+        server_response = requests.post("http://pdfer-app:8080/files", json=data)3412341234"
     }
     server_response = requests.get("http://pdfer-app:8080/files/fileName", json=data)
     if server_response.status_code == 200:
@@ -84,7 +142,7 @@ def get_metrics():
         return Response(prometheus_metrics, content_type='text/plain')
     else:
         print(f"Erro: {server_response.status_code}")
-
+"""
 
 def translate_to_prometheus(json_metrics):
     prometheus_lines = []

@@ -5,13 +5,7 @@ volumes:
   prometheus_data: {}
 
 services:
-  pdfer-app:
-    build:
-      context: .
-    ports:
-      - "8080:8080"  # Mapeia a porta do aplicativo
-    networks:
-      - mynetwork
+  
 
   prometheus-adapter:
       build:
@@ -20,7 +14,17 @@ services:
         - "8081:8081"  # Mapeia a porta do serviço Python
       networks:
         - mynetwork
+      depends_on:
+        - pdfer-app
         
+  pdfer-app:
+    build:
+      context: .
+    ports:
+      - "8080:8080"  # Mapeia a porta do aplicativo
+    networks:
+      - mynetwork
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     ports:
