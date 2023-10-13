@@ -1,6 +1,6 @@
 global:
-  scrape_interval: 15s # Intervalo de coleta de métricas
-  evaluation_interval: 15s
+  scrape_interval: 3s # Intervalo de coleta de métricas
+  evaluation_interval: 3s
 
 scrape_configs:
   - job_name: 'pdfer-app'
@@ -13,6 +13,6 @@ scrape_configs:
       - targets: ['node-exporter:9100']
       
   - job_name: cadvisor
-    scrape_interval: 5s
+    scrape_interval: 3s
     static_configs:
      - targets: [cadvisor:8080]
