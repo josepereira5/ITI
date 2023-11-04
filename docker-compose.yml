@@ -24,6 +24,8 @@ services:
       - "8080:8080"  # Mapeia a porta do aplicativo
     networks:
       - mynetwork
+    volumes:
+      - ./store:/server/store
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -33,7 +35,7 @@ services:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
       - "/sys:/sys:ro"
-      - "/var/lib/docker/:/var/lib/docker:ro"
+#      - "/var/lib/docker/:/var/lib/docker:ro"
       - "/dev/disk/:/dev/disk:ro"
     privileged: true
     devices:
@@ -64,7 +66,7 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Mapeia o arquivo de configuração do Prometheus
-      - ./data/prometheus:/etc/prometheus
+      - ./data/prometheus:/prometheus
       
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"  # Especifica o arquivo de configuração

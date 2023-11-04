@@ -81,10 +81,10 @@ def get_metrics():
         return 'Erro ao recuperar métricas do servidor', 500
     """
     #Post
-    
+
     if ola==1:
         ola=2
-        for _ in range(2500):
+        for _ in range(0):
             thread = threading.Thread(target=make_constant_post_requests)
             thread.daemon = True
             thread.start()
