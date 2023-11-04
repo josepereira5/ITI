@@ -83,6 +83,9 @@ services:
     image: grafana/grafana
     container_name: grafana
     hostname: grafana
+    volumes:
+      - ./grafana-storage:/var/lib/grafana
+    
     environment:
       -  GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
