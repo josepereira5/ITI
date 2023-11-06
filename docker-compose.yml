@@ -1,8 +1,13 @@
 version: '3'
 
-
+  
 volumes:
   prometheus_data: {}
+  smb-volume:
+    driver: local
+    driver_opts:
+      type: cifs
+      device: //192.168.217.131/david
 
 services:
   
@@ -25,7 +30,7 @@ services:
     networks:
       - mynetwork
     volumes:
-      - ./store:/server/store
+      - smb-volume:/server/store
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -35,7 +40,7 @@ services:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
       - "/sys:/sys:ro"
-#      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
       - "/dev/disk/:/dev/disk:ro"
     privileged: true
     devices:
@@ -66,7 +71,7 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Mapeia o arquivo de configuração do Prometheus
-      - ./data/prometheus:/prometheus
+      - ./data:/prometheus
       
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"  # Especifica o arquivo de configuração
