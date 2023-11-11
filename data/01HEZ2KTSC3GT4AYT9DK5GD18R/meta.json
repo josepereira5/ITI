@@ -1,0 +1,17 @@
+{
+	"ulid": "01HEZ2KTSC3GT4AYT9DK5GD18R",
+	"minTime": 1699543537851,
+	"maxTime": 1699545600000,
+	"stats": {
+		"numSamples": 72558,
+		"numSeries": 4916,
+		"numChunks": 4916
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01HEZ2KTSC3GT4AYT9DK5GD18R"
+		]
+	},
+	"version": 1
+}

@@ -7,11 +7,9 @@ volumes:
     driver: local
     driver_opts:
       type: cifs
-      device: //192.168.217.131/david
+      device: //192.168.173.188/ITI
 
 services:
-  
-
   prometheus-adapter:
       build:
         context: ./python_file # Substitua pelo caminho correto para o diretório do seu serviço Python
@@ -19,8 +17,14 @@ services:
         - "8081:8081"  # Mapeia a porta do serviço Python
       networks:
         - mynetwork
-      depends_on:
-        - pdfer-app
+
+  client:
+      build:
+        context: ./python_file2 # Substitua pelo caminho correto para o diretório do seu serviço Python
+      ports:
+        - "8082:8082"  # Mapeia a porta do serviço Python
+      networks:
+        - mynetwork
         
   pdfer-app:
     build:
@@ -40,7 +44,7 @@ services:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
       - "/sys:/sys:ro"
-      - "/var/lib/docker/:/var/lib/docker:ro"
+   #   - "/var/lib/docker/:/var/lib/docker:ro"
       - "/dev/disk/:/dev/disk:ro"
     privileged: true
     devices:
@@ -69,16 +73,10 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
+    user: 0:0
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml  # Mapeia o arquivo de configuração do Prometheus
       - ./data:/prometheus
-      
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"  # Especifica o arquivo de configuração
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
     ports:
       - "9090:9090"  # Mapeia a porta do Prometheus
     networks:
@@ -88,6 +86,7 @@ services:
     image: grafana/grafana
     container_name: grafana
     hostname: grafana
+    user: 0:0
     volumes:
       - ./grafana-storage:/var/lib/grafana
     
