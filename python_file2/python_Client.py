@@ -56,7 +56,7 @@ def main():
         threads = int(input("Insira o número de threads a criar: "))
 """
     opcao = 2
-    threads = 20
+    threads = 0
             
     if opcao == 1:
         for _ in range(threads):
