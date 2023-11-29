@@ -2,7 +2,6 @@ version: '3'
 
 networks:
   mynetwork:
-    external: true
 
 volumes:
   smb-volume:
@@ -12,19 +11,13 @@ volumes:
       device: //192.168.173.188/ITI
 
 services:
-  traefik:
-    image: traefik:v2.5
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
     ports:
-      - "80:80"
-      - "8083:8080"  # Traefik dashboard
-    networks:
-      - mynetwork
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - '80:80'
+      - '81:81'
+      - '443:443'
 
   prometheus-adapter:
     build:
@@ -51,10 +44,6 @@ services:
       - mynetwork
     #volumes:
      # - smb-volume:/server/store
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pdfer-app.rule=Host(`192.168.217.128`)"  # Replace with your domain
-      - "traefik.http.services.pdfer-app.loadbalancer.server.port=8080"
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
