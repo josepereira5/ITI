@@ -2,6 +2,7 @@ version: '3'
 
 networks:
   mynetwork:
+    external: true
 
 volumes:
   smb-volume:
@@ -11,13 +12,20 @@ volumes:
       device: //192.168.173.188/ITI
 
 services:
-
-  nginx:
-    image: 'jc21/nginx-proxy-manager:latest'
+  traefik:
+    image: traefik:v2.5
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
+      - "80:80"
+      - "8083:8080" 
+    networks:
+      - mynetwork
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
   prometheus-adapter:
     build:
@@ -44,6 +52,10 @@ services:
       - mynetwork
     #volumes:
      # - smb-volume:/server/store
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pdfer-app.rule=Host(`192.168.173.78`)"  # Replace with your domain
+      - "traefik.http.services.pdfer-app.loadbalancer.server.port=8080"
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -87,6 +99,10 @@ services:
       - "9090:9090"
     networks:
       - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pdfer-app.rule=Host(`192.168.173.78`)"  # Replace with your domain
+      - "traefik.http.services.pdfer-app.loadbalancer.server.port=9090"
       
   grafana:
     image: grafana/grafana
@@ -101,3 +117,5 @@ services:
       - 3000:3000
     networks:
       - mynetwork
+
+
